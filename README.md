@@ -180,7 +180,8 @@
 
     *Why?*: Setting anonymous functions in-line can be easy, but when those functions are more than 1 line of code they can reduce the readability. Defining the functions below the bindable members (the functions will be hoisted) moves the implementation details down, keeps the bindable members up top, and makes it easier to read. 
 
- - **Watches at the end**: Place scope watches after bindable members. Don't inline watch functions declarations.
+  - **Watches at the end**: Place scope watches after bindable members. Don't inline watch functions declarations.
+
     - Use `on{{NAME}}Change` naming for watch functions.
 
     ```javascript
