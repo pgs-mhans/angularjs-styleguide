@@ -184,6 +184,7 @@
 
     - Use `on{{NAME}}Change` naming for watch functions.
 
+
     ```javascript
     /* avoid */
     function Sessions($scope) {
@@ -191,7 +192,9 @@
           /* ... */
         };
 
-        $scope.$watch('sessions', function(newValue) { ... });
+        $scope.$watch('sessions', function(newValue) {
+          /* ... */
+        });
 
         $scope.refresh = function () {
           /* ... */
