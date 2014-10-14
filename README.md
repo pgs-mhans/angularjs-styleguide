@@ -808,27 +808,22 @@
     exceptionConfig.$inject = ['$provide'];
 
     function exceptionConfig($provide) {
-        $provide.decorator('$exceptionHandler', extendExceptionHandler);
-    }
-
-    extendExceptionHandler.$inject = ['$delegate', 'toastr'];
-
-    function extendExceptionHandler($delegate, toastr) {
-        return function(exception, cause) {
-            $delegate(exception, cause);
-            var errorData = { 
-                exception: exception, 
-                cause: cause 
+        $provide.decorator('$exceptionHandler', function ($delegate, toastr) {
+            return function(exception, cause) {
+                $delegate(exception, cause);
+                var errorData = {
+                    exception: exception,
+                    cause: cause
+                };
+                /**
+                 * Could add the error to a service's collection,
+                 * add errors to $rootScope, log errors to remote web server,
+                 * or log locally. Or throw hard. It is entirely up to you.
+                 * throw exception;
+                 */
+                toastr.error(exception.msg, errorData);
             };
-            /**
-             * Could add the error to a service's collection,
-             * add errors to $rootScope, log errors to remote web server,
-             * or log locally. Or throw hard. It is entirely up to you.
-             * throw exception;
-             */
-            toastr.error(exception.msg, errorData);
-        };
-    }
+        });
   	```
 
   - **Exception Catchers**: Create a factory that exposes an interface to catch and gracefully handle exceptions.
@@ -841,22 +836,20 @@
     /* recommended */
     angular
         .module('blocks.exception')
-        .factory('exception', exception);
-
-    exception.$inject = ['logger'];
-
-    function exception(logger) {
-        var service = {
-            catcher: catcher
-        };
-        return service;
-
-        function catcher(message) {
-            return function(reason) {
-                logger.error(message, reason);
+        .factory('exception', function (logger) {
+            var service = {
+                catcher: catcher
             };
-        }
-    }
+            return service;
+
+            /////////////////////
+
+            function catcher(message) {
+                return function(reason) {
+                    logger.error(message, reason);
+                };
+            }
+        });
     ```
 
   - **Route Errors**: Handle and log all routing errors using [`$routeChangeError`](https://docs.angularjs.org/api/ngRoute/service/$route#$routeChangeError).
@@ -1026,9 +1019,9 @@
     // avengers.controller.js
     angular
         .module
-        .controller('AvengersController', AvengersController);
-
-    function AvengersController(){ }
+        .controller('AvengersController', function () {
+            /* */
+        });
     ```
 
 
@@ -1044,9 +1037,9 @@
     // logger.service.js
     angular
         .module
-        .factory('logger', logger);
-
-    function logger(){ }
+        .factory('logger', function () {
+            /* */
+        });
     ```
 
   - **Directive Component Names**: Use consistent names for all directives using camel-case. Use a short prefix to describe the area that the directives belong (some example are company prefix or project prefix).
@@ -1061,11 +1054,14 @@
     // avenger.profile.directive.js    
     angular
         .module
-        .directive('xxAvengerProfile', xxAvengerProfile);
+        .directive('xxAvengerProfile', function () {
+            /* */
+        });
+    ```
+    // usage
 
-    // usage is <xx-avenger-profile> </xx-avenger-profile>
-
-    function xxAvengerProfile(){ }
+    ```html
+    <xx-avenger-profile> </xx-avenger-profile>
     ```
 
   - **Modules**:  When there are multiple modules, the main module file is named `app.module.js` while other dependent modules are named after what they represent. For example, an admin module is named `admin.module.js`. The respective registered module names would be `app` and `admin`. A single module app might be named `app.js`, omitting the module moniker.
