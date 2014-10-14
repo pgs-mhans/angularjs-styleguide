@@ -40,10 +40,10 @@
     /* avoid */
     angular
       	.module('app', ['ngRoute'])
-      	.controller('SomeController' , function(){
+      	.controller('SomeController' , function () {
       	    ...
       	 })
-      	.factory('someFactory' , function(){
+      	.factory('someFactory' , function () {
       	    ...
       	});
 
@@ -65,7 +65,7 @@
     // someController.js
     angular
       	.module('app')
-      	.controller('SomeController' , function() {
+      	.controller('SomeController' , function () {
       	    ...
       	});
     ```
@@ -76,7 +76,7 @@
     // someFactory.js
     angular
       	.module('app')
-      	.factory('someFactory' , function() {
+      	.factory('someFactory' , function () {
       	    ...
       	});
 
@@ -133,7 +133,7 @@
     /* recommended */
     angular
         .module('app')
-        .controller('SomeController' , function() {
+        .controller('SomeController' , function () {
             ...
         });
     ```
@@ -166,7 +166,7 @@
     // dashboard.js
     angular
         .module('app')
-        .controller('Dashboard', function() {
+        .controller('Dashboard', function () {
             ...
          });
      ```
@@ -183,13 +183,13 @@
     ```javascript
     /* avoid */
     function Sessions($scope) {
-        $scope.gotoSession = function() {
+        $scope.gotoSession = function () {
           /* ... */
         };
-        $scope.refresh = function() {
+        $scope.refresh = function () {
           /* ... */
         };
-        $scope.search = function() {
+        $scope.search = function () {
           /* ... */
         };
         $scope.sessions = [];
@@ -241,13 +241,13 @@
         $scope.avengers = [];
         $scope.title = 'Avengers';
 
-        var activate = function() {
-            return getAvengers().then(function() {
+        var activate = function () {
+            return getAvengers().then(function () {
                 logger.info('Activated Avengers View');
             });
         }
 
-        var getAvengers = function() {
+        var getAvengers = function () {
             return dataservice.getAvengers().then(function(data) {
                 $scope.avengers = data;
                 return $scope.avengers;
@@ -279,7 +279,7 @@
         /////////////////////
 
         function activate() {
-            return getAvengers().then(function() {
+            return getAvengers().then(function () {
                 logger.info('Activated Avengers View');
             });
         }
@@ -345,7 +345,7 @@
     // service
     angular
         .module('app')
-        .service('logger', function() {
+        .service('logger', function () {
             this.logError = function(msg) {
                 /* */
             };
@@ -356,7 +356,7 @@
     // factory
     angular
         .module('app')
-        .factory('logger', function(){
+        .factory('logger', function () {
             return {
                 logError: function(msg){
                     /* */
@@ -425,10 +425,6 @@
     }
     ```
 
-  - This way bindings are mirrored across the host object, primitive values cannot update alone using the revealing module pattern
-
-      ![Factories Using "Above the Fold"](https://raw.githubusercontent.com/johnpapa/angularjs-styleguide/master/assets/above-the-fold-2.png)
-
   - **Function Declarations to Hide Implementation Details**: Use function declarations to hide implementation details. Keep your acessible members of the factory up top. Point those to function declarations that appears later in the file. For more details see [this post](http://www.johnpapa.net/angular-function-declarations-function-expressions-and-readable-code).
 
     *Why?*: Placing accessible members at the top makes it easy to read and helps you instantly identify which functions of the factory you can access externally.
@@ -450,19 +446,19 @@
         var isPrimed = false;
         var primePromise;
 
-        var getAvengers = function() {
+        var getAvengers = function () {
            // implementation details go here
         };
 
-        var getAvengerCount = function() {
+        var getAvengerCount = function () {
             // implementation details go here
         };
 
-        var getAvengersCast = function() {
+        var getAvengersCast = function () {
            // implementation details go here
         };
 
-        var prime = function() {
+        var prime = function () {
            // implementation details go here
         };
 
@@ -586,7 +582,7 @@
         activate();
 
         function activate() {
-            return getAvengers().then(function() {
+            return getAvengers().then(function () {
                 logger.info('Activated Avengers View');
             });
         }
@@ -616,7 +612,7 @@
          * Ask the getAvengers function for the
          * avenger data and wait for the promise
          */
-        return getAvengers().then(function() {
+        return getAvengers().then(function () {
             /**
              * Step 4
              * Perform an action on resolve of final promise
@@ -1169,7 +1165,7 @@
     - The following code is an example of a gulp task using ngAnnotate
 
     ```javascript
-    gulp.task('js', ['jshint'], function() {
+    gulp.task('js', ['jshint'], function () {
         var source = pkg.paths.js;
         return gulp.src(source)
             .pipe(sourcemaps.init())
@@ -1699,19 +1695,19 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     *Why?*: Writing the test descriptions helps clearly define what your story will do, will not do, and how you can measure success.
 
     ```javascript
-    it('should have Avengers controller', function() {
+    it('should have Avengers controller', function () {
         //TODO
     });
 
-    it('should find 1 Avenger when filtered by name', function() {
+    it('should find 1 Avenger when filtered by name', function () {
         //TODO
     });
 
-    it('should have 10 Avengers', function() {}
+    it('should have 10 Avengers', function () {}
         //TODO (mock data?)
     });
 
-    it('should return Avengers via XHR', function() {}
+    it('should return Avengers via XHR', function () {}
         //TODO ($httpBackend?)
     });
 
@@ -1799,7 +1795,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
    * Logger Factory
    * @namespace Factories
    */
-  (function() {
+  (function () {
     angular
         .module('app')
         .factory('logger', logger);
@@ -1919,7 +1915,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     // constants.js
 
     /* global toastr:false, moment:false */
-    (function() {
+    (function () {
         'use strict';
 
         angular
