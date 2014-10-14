@@ -544,6 +544,8 @@
                 getAvengers: getAvengers
             };
 
+            //////////////////
+
             function getAvengers() {
                 return $http.get('/api/maa')
                     .then(getAvengersComplete)
@@ -649,26 +651,19 @@
         .module('app.widgets')
 
         /* order directive that is specific to the order module */
-        .directive('orderCalendarRange', orderCalendarRange)
+        .directive('orderCalendarRange', function () {
+           /* implementation details */
+        })
 
         /* sales directive that can be used anywhere across the sales app */
-        .directive('salesCustomerInfo', salesCustomerInfo)
+        .directive('salesCustomerInfo', function () {
+            /* implementation details */
+        })
 
         /* spinner directive that can be used anywhere across apps */
-        .directive('sharedSpinner', sharedSpinner);
-
-
-    function orderCalendarRange() {
-        /* implementation details */
-    }
-
-    function salesCustomerInfo() {
-        /* implementation details */
-    }
-
-    function sharedSpinner() {
-        /* implementation details */
-    }
+        .directive('sharedSpinner', function () {
+            /* implementation details */
+        });
     ```
 
     ```javascript
@@ -681,45 +676,9 @@
      */
     angular
         .module('sales.order')
-        .directive('acmeOrderCalendarRange', orderCalendarRange);
-
-    function orderCalendarRange() {
-        /* implementation details */
-    }
-    ```
-
-    ```javascript
-    /* recommended */
-    /* customerInfo.directive.js */
-
-    /**
-     * @desc spinner directive that can be used anywhere across the sales app at a company named Acme
-     * @example <div acme-sales-customer-info></div>
-     */    
-    angular
-        .module('sales.widgets')
-        .directive('acmeSalesCustomerInfo', salesCustomerInfo);
-
-    function salesCustomerInfo() {
-        /* implementation details */
-    }
-    ```
-
-    ```javascript
-    /* recommended */
-    /* spinner.directive.js */
-
-    /**
-     * @desc spinner directive that can be used anywhere across apps at a company named Acme
-     * @example <div acme-shared-spinner></div>
-     */
-    angular
-        .module('shared.widgets')
-        .directive('acmeSharedSpinner', sharedSpinner);
-
-    function sharedSpinner() {
-        /* implementation details */
-    }
+        .directive('acmeOrderCalendarRange', function(){
+            /* implementation details */
+        });
     ```
 
     - Note: There are many naming options for directives, especially since they can be used in narrow or wide scopes. Choose one that makes the directive and it's file name distinct and clear. Some examples are below, but see the naming section for more recommendations.
@@ -733,6 +692,7 @@
     *Why?*: The unique short prefix identifies the directive's context and origin. For example a prefix of `cc-` may indicate that the directive is part of a CodeCamper app while `acme-` may indicate a directive for the Acme company. 
 
     - Note: Avoid `ng-` as these are reserved for AngularJS directives.Research widely used directives to avoid naming conflicts, such as `ion-` for the [Ionic Framework](http://ionicframework.com/). 
+    - Note: Use `pgs-` prefix for reusable PGS directives if possible.
 
 - **Restrict to Elements and Attributes**: When creating a directive that makes sense as a standalone element, allow restrict `E` (custom element) and optionally restrict `A` (custom attribute). Generally, if it could be its own control, `E` is appropriate. General guideline is allow `EA` but lean towards implementing as an element when its standalone and as an attribute when it enhances its existing DOM element.
 
@@ -751,20 +711,18 @@
     /* avoid */
     angular
         .module('app.widgets')
-        .directive('myCalendarRange', myCalendarRange);
+        .directive('myCalendarRange', function () {
+            var directive = {
+                link: link,
+                templateUrl: '/template/is/located/here.html',
+                restrict: 'C'
+            };
+            return directive;
 
-    function myCalendarRange() {
-        var directive = {
-            link: link,
-            templateUrl: '/template/is/located/here.html',
-            restrict: 'C'
-        };
-        return directive;
-
-        function link(scope, element, attrs) {
-          /* */
-        }
-    }
+            function link(scope, element, attrs) {
+              /* */
+            }
+        });
     ```
 
     ```html
@@ -777,76 +735,20 @@
     /* recommended */
     angular
         .module('app.widgets')
-        .directive('myCalendarRange', myCalendarRange);
+        .directive('myCalendarRange', function () {
+            var directive = {
+                link: link,
+                templateUrl: '/template/is/located/here.html',
+                restrict: 'EA'
+            };
+            return directive;
 
-    function myCalendarRange() {
-        var directive = {
-            link: link,
-            templateUrl: '/template/is/located/here.html',
-            restrict: 'EA'
-        };
-        return directive;
+            //////////////////////
 
-        function link(scope, element, attrs) {
-          /* */
-        }
-    }
-    ```
-
-- **Directives and ControllerAs**: Use `controller as` syntax with a directive to be consistent with using `controller as` with view and controller pairings.
-
-    *Why?*: It makes sense and it's not difficult.
-
-    - Note: The directive below demonstrates some of the ways you can use scope inside of link and directive controllers, using controllerAs. I in-lined the template just to keep it all in one place. 
-
-    ```html
-    <div my-example max="77"></div>
-    ```
-
-    ```javascript
-    angular
-        .module('app')
-        .directive('myExample', myExample);
-
-    function myExample() {
-        var directive = {
-            restrict: 'EA',
-            templateUrl: 'app/feature/example.directive.html',
-            scope: {
-                max: '='
-            },
-            link: linkFunc,
-            controller : ExampleController,
-            controllerAs: '$scope'
-        };
-        return directive;
-
-        ExampleController.$inject = ['$scope'];
-        function ExampleController($scope) {
-            // Injecting $scope just for comparison
-            /* jshint validthis:true */
-            var $scope = this;
-
-            $scope.min = 3; 
-            $scope.max = $scope.max; 
-            console.log('CTRL: $scope.max = %i', $scope.max);
-            console.log('CTRL: $scope.min = %i', $scope.min);
-            console.log('CTRL: $scope.max = %i', $scope.max);
-        }
-
-        function linkFunc(scope, el, attr, ctrl) {
-            console.log('LINK: scope.max = %i', scope.max);
-            console.log('LINK: scope.$scope.min = %i', scope.$scope.min);
-            console.log('LINK: scope.$scope.max = %i', scope.$scope.max);
-        }
-    }
-    ```
-
-    ```html
-    /* example.directive.html */
-    <div>hello world</div>
-    <div>max={{$scope.max}}<input ng-model="$scope.max"/></div>
-    <div>min={{$scope.min}}<input ng-model="$scope.min"/></div>
+            function link(scope, element, attrs) {
+              /* */
+            }
+        });
     ```
 
 **[Back to top](#table-of-contents)**
