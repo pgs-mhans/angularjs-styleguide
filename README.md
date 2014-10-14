@@ -343,31 +343,26 @@
 
     ```javascript
     // service
-
     angular
         .module('app')
-        .service('logger', logger);
-
-    function logger() {
-      this.logError = function(msg) {
-        /* */
-      };
-    }
+        .service('logger', function() {
+            this.logError = function(msg) {
+                /* */
+            };
+        });
     ```
 
     ```javascript
     // factory
     angular
         .module('app')
-        .factory('logger', logger);
-
-    function logger() {
-        return {
-            logError: function(msg) {
-              /* */
+        .factory('logger', function(){
+            return {
+                logError: function(msg){
+                    /* */
+                }
             }
-       };
-    }
+        });
     ```
 
 **[Back to top](#table-of-contents)**
