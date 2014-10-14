@@ -539,29 +539,25 @@
     // dataservice factory
     angular
         .module('app.core')
-        .factory('dataservice', dataservice);
+        .factory('dataservice', function ($http, logger) {
+            return {
+                getAvengers: getAvengers
+            };
 
-    dataservice.$inject = ['$http', 'logger'];
+            function getAvengers() {
+                return $http.get('/api/maa')
+                    .then(getAvengersComplete)
+                    .catch(getAvengersFailed);
 
-    function dataservice($http, logger) {
-        return {
-            getAvengers: getAvengers
-        };
+                function getAvengersComplete(response) {
+                    return response.data.results;
+                }
 
-        function getAvengers() {
-            return $http.get('/api/maa')
-                .then(getAvengersComplete)
-                .catch(getAvengersFailed);
-
-            function getAvengersComplete(response) {
-                return response.data.results;
+                function getAvengersFailed(error) {
+                    logger.error('XHR Failed for getAvengers.' + error.data);
+                }
             }
-
-            function getAvengersFailed(error) {
-                logger.error('XHR Failed for getAvengers.' + error.data);
-            }
-        }
-    }
+        });
     ```
     - Note: The data service is called from consumers, such as a controller, hiding the implementation from the consumers, as shown below.
 
@@ -571,30 +567,27 @@
     // controller calling the dataservice factory
     angular
         .module('app.avengers')
-        .controller('Avengers', Avengers);
+        .controller('Avengers', function ($scope, dataservice, logger) {
+            $scope.avengers = [];
 
-    Avengers.$inject = ['dataservice', 'logger'];
+            activate();
 
-    function Avengers(dataservice, logger) {
-        var $scope = this;
-        $scope.avengers = [];
+            ////////////////////
 
-        activate();
-
-        function activate() {
-            return getAvengers().then(function () {
-                logger.info('Activated Avengers View');
-            });
-        }
-
-        function getAvengers() {
-            return dataservice.getAvengers()
-                .then(function(data) {
-                    $scope.avengers = data;
-                    return $scope.avengers;
+            function activate() {
+                return getAvengers().then(function () {
+                    logger.info('Activated Avengers View');
                 });
-        }
-    }      
+            }
+
+            function getAvengers() {
+                return dataservice.getAvengers()
+                    .then(function(data) {
+                        $scope.avengers = data;
+                        return $scope.avengers;
+                    });
+            }
+        });
     ```
 
 - **Return a Promise from Data Calls**: When calling a data service that returns a promise such as $http, return a promise in your calling function too.
