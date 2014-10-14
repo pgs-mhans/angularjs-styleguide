@@ -180,20 +180,28 @@
 
     *Why?*: Setting anonymous functions in-line can be easy, but when those functions are more than 1 line of code they can reduce the readability. Defining the functions below the bindable members (the functions will be hoisted) moves the implementation details down, keeps the bindable members up top, and makes it easier to read. 
 
+ - **Watches at the end**: Place scope watches after bindable members. Don't inline watch functions declarations.
+    - Use `on{{NAME}}Change` naming for watch functions.
+
     ```javascript
     /* avoid */
     function Sessions($scope) {
         $scope.gotoSession = function () {
           /* ... */
         };
+
+        $scope.$watch('sessions', function(newValue) { ... });
+
         $scope.refresh = function () {
           /* ... */
         };
         $scope.search = function () {
           /* ... */
         };
+
         $scope.sessions = [];
         $scope.title = 'Sessions';
+
     ```
 
     ```javascript
@@ -204,6 +212,8 @@
         $scope.search = search;
         $scope.sessions = [];
         $scope.title = 'Sessions';
+
+        $scope.$watch('sessions', onSessionsChange);
 
         ////////////
 
@@ -216,6 +226,10 @@
         }
 
         function search() {
+          /* */
+        }
+
+        function onSessionsChange (newValue) {
           /* */
         }
     ```
@@ -987,9 +1001,7 @@
     // avengers.controller.js
     angular
         .module
-        .controller('HeroAvengers', HeroAvengers);
-
-    function HeroAvengers(){ }
+        .controller('HeroAvengers', function () { ... });
     ```
     
   - **Controller Name Suffix**: Append the controller name with the suffix `Controller` or with no suffix. Choose 1, not both.
@@ -1019,9 +1031,7 @@
     // avengers.controller.js
     angular
         .module
-        .controller('AvengersController', function () {
-            /* */
-        });
+        .controller('AvengersController', function () { ... });
     ```
 
 
@@ -1037,9 +1047,7 @@
     // logger.service.js
     angular
         .module
-        .factory('logger', function () {
-            /* */
-        });
+        .factory('logger', function () { ... });
     ```
 
   - **Directive Component Names**: Use consistent names for all directives using camel-case. Use a short prefix to describe the area that the directives belong (some example are company prefix or project prefix).
@@ -1054,9 +1062,7 @@
     // avenger.profile.directive.js    
     angular
         .module
-        .directive('xxAvengerProfile', function () {
-            /* */
-        });
+        .directive('xxAvengerProfile', function () { ... });
     ```
     // usage
 
@@ -1527,58 +1533,8 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
 **[Back to top](#table-of-contents)**
 
-## File Templates and Snippets
-Use file templates or snippets to help follow consistent styles and patterns. Here are templates and/or snippets for some of the web development editors and IDEs.
-
-  - **Sublime Text**: AngularJS snippets that follow these styles and guidelines. 
-
-    - Download the [Sublime Angular snippets](assets/sublime-angular-snippets.zip) 
-    - Place it in your Packages folder
-    - Restart Sublime 
-    - In a JavaScript file type these commands followed by a `TAB`
- 
-    ```javascript
-    ngcontroller // creates an Angular controller
-    ngdirective // creates an Angular directive
-    ngfactory // creates an Angular factory
-    ngmodule // creates an Angular module
-    ```
-
-  - **Visual Studio**: AngularJS file templates that follow these styles and guidelines can be found at [SideWaffle](http://www.sidewaffle.com)
-
-    - Download the [SideWaffle](http://www.sidewaffle.com) Visual Studio extension (vsix file)
-    - Run the vsix file
-    - Restart Visual Studio
-
-  - **WebStorm**: AngularJS snippets and file templates that follow these styles and guidelines. You can import them into your WebStorm settings:
-
-    - Download the [WebStorm AngularJS file templates and snippets](assets/webstorm-angular-file-template.settings.jar) 
-    - Open WebStorm and go to the `File` menu
-    - Choose the `Import Settings` menu option
-    - Select the file and click `OK`
-    - In a JavaScript file type these commands followed by a `TAB`:
-
-    ```javascript
-    ng-c // creates an Angular controller
-    ng-f // creates an Angular factory
-    ng-m // creates an Angular module
-    ```
-
-**[Back to top](#table-of-contents)**
-
 ## AngularJS docs
 For anything else, API reference, check the [Angular documentation](//docs.angularjs.org/api).
-
-## Contributing
-
-Open an issue first to discuss potential changes/additions. If you have questions with the guide, feel free to leave them as issues in the repository. If you find a typo, create a pull request. The idea is to keep the content up to date and use github’s native feature to help tell the story with issues and PR’s, which are all searchable via google. Why? Because odds are if you have a question, someone else does too! You can learn more here at about how to contribute.
-
-*By contributing to this repository you are agreeing to make your content available subject to the license of this repository.*
-
-  - **Process**
-    1. Discuss the changes in an Issue. 
-    1. Open a Pull Request, reference the issue, and explain the change and why it adds value.
-    1. The Pull Request will be evaluated and either merged or declined.
 
 ## License
 
