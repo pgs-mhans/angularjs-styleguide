@@ -133,9 +133,9 @@
     /* recommended */
     angular
         .module('app')
-        .controller('SomeController' , SomeController);
-    
-    function SomeController() { }
+        .controller('SomeController' , function() {
+            ...
+        });
     ```
 
   - **Setting vs Getting**: Only set once and get for all other instances.
@@ -145,20 +145,12 @@
   	  - Use `angular.module('app', []);` to set a module.
   	  - Use  `angular.module('app');` to get a module. 
 
-  - **Named vs Anonymous Functions**: Use named functions instead of passing an anonymous function in as a callback. 
+  - **Named vs Anonymous Functions**: Use anonymous functions instead of passing an named function in as a callback.
 
-	*Why?*: This produces more readable code, is much easier to debug, and reduces the amount of nested callback code.
+	*Why?*: This produces more readable code when we aggreed the *Rule of 1*. It also prevent creation of global functions which needs IIFA when scripts are concatenated.
 
     ```javascript
     /* avoid */
-    angular
-        .module('app')
-        .controller('Dashboard', function() { });
-        .factory('logger', function() { });
-    ```
-
-    ```javascript
-    /* recommended */
 
     // dashboard.js
     angular
@@ -169,13 +161,15 @@
     ```
 
     ```javascript
-    // logger.js
+    /* recommend */
+
+    // dashboard.js
     angular
         .module('app')
-        .factory('logger', logger);
-
-    function logger() { }
-    ```
+        .controller('Dashboard', function() {
+            ...
+         });
+     ```
 
 **[Back to top](#table-of-contents)**
 
